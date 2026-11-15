@@ -24,6 +24,7 @@ struct ContentView: View {
             WebApp().tabItem { Label("VetMate", systemImage: "pawprint.fill") }.tag(0)
             LabelScanner().tabItem { Label("Label Scan", systemImage: "viewfinder") }.tag(1)
             ClinicalWorkspace().tabItem { Label("Clinical", systemImage: "heart.text.square") }.tag(2)
+            FarmWorkspace().tabItem { Label("Farm", systemImage: "leaf.fill") }.tag(3)
         }.tint(.blue)
     }
 }
