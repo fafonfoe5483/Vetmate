@@ -262,4 +262,167 @@ const priorGuide=drugGuide;drugGuide=function(){priorGuide();const input=$('dq')
 document.querySelector('header .edition').textContent='V2.1 SCAN BETA';
 render();
 })();
-</script></html>
+</script>
+<style id="vm-dashboard-v22">
+:root{--vm-blue:#078dff;--vm-cyan:#51c8ff;--vm-border:#253d53;--ink:#f5f8fd;--muted:#b8c6d7;--accent:#138bff;color-scheme:dark}
+body{background:#030a11!important;color:#f5f8fd;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}
+body::before{display:none!important}
+header,main{max-width:820px!important;margin-inline:auto}
+header{padding:calc(17px + env(safe-area-inset-top)) 19px 9px;gap:10px}
+header h1{font-size:29px;font-style:italic;font-weight:900;letter-spacing:-1.5px}
+header .brandmark{color:#109dff;background:transparent}
+header .edition{font-size:10px;color:#84c6ff!important;white-space:nowrap}
+main{padding:12px 18px calc(100px + env(safe-area-inset-bottom))}
+h2,h3{color:#f5f9ff}
+body.vm-dashboard header{display:none}
+body.vm-dashboard main{max-width:1480px!important;width:100%;padding:0 22px calc(98px + env(safe-area-inset-bottom))}
+.vm-hero{position:relative;isolation:isolate;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,640px);align-items:center;min-height:280px;margin:0 0 5px;overflow:hidden;border-radius:0 0 22px 22px;background:radial-gradient(ellipse at 77% 95%,#06346d 0%,#031323 43%,#030a11 77%)}
+.vm-hero::after{z-index:-1;content:"";position:absolute;left:-5%;right:-8%;height:100px;bottom:12px;border-top:4px solid #047ef9;border-radius:50%;transform:rotate(-7deg);box-shadow:0 -8px 34px #025bbf80;opacity:.75}
+.vm-hero-copy{position:relative;z-index:2;padding:32px 5px 24px 23px}
+.vm-logo{display:flex;align-items:center;gap:12px;white-space:nowrap}
+.vm-bigpaw{width:96px;height:96px;flex:none;filter:drop-shadow(0 0 12px #006beba0)}
+.vm-wordmark{font-size:clamp(46px,6.5vw,98px);font-weight:900;letter-spacing:-.065em;line-height:1.04;font-style:italic;background:linear-gradient(#fff 20%,#a8bfd5 46%,#fff 61%,#7695b6 96%);-webkit-background-clip:text;background-clip:text;color:transparent;padding-right:.1em}
+.vm-wordmark sup{font-size:.16em;font-style:normal;letter-spacing:0;color:#e8f3ff;vertical-align:super}
+.vm-brandline{font-size:clamp(10px,1.5vw,19px);font-weight:750;letter-spacing:.27em;margin:0 0 10px 4px;color:#f1f6ff}
+.vm-version{display:inline-flex;font-size:13px;letter-spacing:1px;font-weight:800;font-style:italic;color:#dceeff;border:2px solid #0a98ff;border-radius:9px;padding:4px 11px;box-shadow:inset 0 0 12px #0d82f14d,0 0 14px #0067cf33;vertical-align:middle}
+.vm-tagline{font-size:clamp(15px,2.1vw,29px);font-weight:450;font-style:italic;line-height:1.35;color:#eef5ff;margin:24px 0 0 5px}
+.vm-hero-photo{width:100%;height:auto;display:block;object-fit:contain;align-self:end;position:relative;z-index:1;max-width:640px;image-rendering:auto;filter:none!important;mask-image:linear-gradient(90deg,transparent 0%,black 10%);-webkit-mask-image:linear-gradient(90deg,transparent 0%,black 10%)}
+.vm-scan-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin:0 0 20px}
+.vm-scan-card{position:relative;display:grid;grid-template-columns:clamp(62px,10vw,138px) 1fr 20px;gap:17px;align-items:center;padding:22px 24px;min-height:176px;width:100%;text-align:left;background:radial-gradient(ellipse at 5% 90%,#073778 0%,#071522 42%,#030b13 75%);border:2px solid #0faeff;border-radius:24px;box-shadow:inset 0 -2px 0 #1050b8,0 7px 22px #0006;overflow:hidden}
+.vm-scan-card:nth-child(2){border-color:#138bff;background:radial-gradient(ellipse at 11% 48%,#092b4c,#030b13 65%)}
+.vm-scan-card>.vm-big-icon{width:100%;max-width:112px;aspect-ratio:1;color:#d6edff;filter:drop-shadow(0 0 13px #158cffaa)}
+.vm-camera-title{display:flex;align-items:center;gap:12px;margin-bottom:5px}
+.vm-camera-title svg{width:32px;height:32px;flex:none;color:#c0e2ff}
+.vm-camera-title strong{font-size:clamp(20px,2.6vw,38px);font-weight:800;line-height:1.12;letter-spacing:-.7px}
+.vm-card-copy small{display:block;color:#d2dce9;font-weight:450;font-size:clamp(14px,1.6vw,22px);line-height:1.35}
+.vm-chev{font-size:35px;font-weight:600;color:#139dff}
+.vm-feature-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:20px}
+.vm-feature{background:linear-gradient(145deg,#152b3c 0%,#0a141e 64%,#101d2a 100%);border:1px solid #2c4258;border-radius:18px;min-height:108px;display:flex;align-items:center;gap:15px;text-align:left;padding:14px 17px;box-shadow:inset 0 1px 4px #c4dfff09;min-width:0;width:100%}
+.vm-feature .vm-big-icon{width:58px;height:58px;flex:none;filter:drop-shadow(0 3px 8px #0065bc66);color:#e1f2ff}
+.vm-feature span{min-width:0;display:block}
+.vm-feature strong{font-size:clamp(16px,1.8vw,25px);letter-spacing:-.55px;line-height:1.14;display:block;margin-bottom:5px}
+.vm-feature small{display:block;font-size:clamp(12px,1.23vw,17px);line-height:1.3;color:#cfdaea;font-weight:450}
+.vm-feature:active,.vm-scan-card:active{transform:scale(.988);filter:brightness(1.17)}
+@media(hover:hover){.vm-feature:hover,.vm-scan-card:hover{border-color:#54baff;filter:brightness(1.12)}}
+#nav{position:fixed;left:50%;right:auto;bottom:0;transform:translateX(-50%);width:min(calc(100% - 34px),1440px);max-width:none;margin:0;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));background:#09141df5;border:1px solid #263b4e;border-radius:22px 22px 0 0;padding:6px 7px calc(6px + env(safe-area-inset-bottom));gap:5px;box-shadow:0 -6px 30px #0005;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+#nav button{min-height:64px;border:0;border-radius:15px;background:transparent;color:#b4c5d8;padding:7px 3px;font-size:12px;gap:4px;box-shadow:none;font-weight:600}
+#nav button svg{width:26px;height:26px;stroke:currentColor}
+#nav button.active{background:linear-gradient(145deg,#0878de,#064bb6);color:#fff;box-shadow:inset 0 -2px 0 #259dff,0 0 16px #076cfa30}
+.vm-pinned{border-top:1px solid #26394a;padding:15px 0 1px;margin-top:7px}
+.vm-pinned .grid{grid-template-columns:repeat(6,minmax(0,1fr));gap:9px}
+.vm-pinned .tile,.vm-pinned .tile .open{min-height:88px}
+.vm-pinned .tile .open{font-size:12px}
+.vm-pinned .sectionline h3{margin:0 0 9px;font-size:17px}
+.vm-subhead{display:flex;align-items:center;gap:12px;margin:8px 0 18px}
+.vm-subhead svg{width:38px;height:38px;flex:none;color:#149eff}
+.vm-subhead h2{font-size:26px;letter-spacing:-.7px;margin:0;line-height:1.15}
+.vm-subhead p{color:#b5c5d8;font-size:13px;margin:4px 0 0}
+.vm-links a{display:block;padding:13px 0;border-bottom:1px solid #283b50;color:#8dccff;text-decoration:none;line-height:1.35}
+.vm-links a:last-child{border:0}
+.vm-check{display:flex;align-items:flex-start;gap:10px;margin:13px 0;font-size:14px;font-weight:500}
+.vm-check input{width:21px;height:21px;min-height:21px;flex:none;accent-color:#078dff;margin:1px 0;padding:0}
+.vm-check input:checked+span{color:#b5c6d6;text-decoration:line-through}
+.vm-button-row{display:flex;gap:9px;flex-wrap:wrap;margin:10px 0}.vm-button-row button{flex:1}
+.vm-patient-list button{display:flex;align-items:center;justify-content:space-between;width:100%;text-align:left;margin:8px 0;padding:10px 12px}
+.vm-patient-list button .avatar{width:48px;height:48px}.vm-patient-list button>span{flex:1;margin-left:10px}
+.vm-dense .vm-feature{min-height:88px;padding:10px}.vm-dense .vm-scan-card{min-height:138px;padding:15px}
+.vm-dashboard footer{margin:16px 0 6px}
+@media(max-width:1100px){.vm-hero{grid-template-columns:minmax(0,1fr) minmax(0,50%);min-height:235px}.vm-bigpaw{width:64px;height:64px}.vm-logo{gap:8px}.vm-feature{gap:10px;padding:11px}.vm-feature .vm-big-icon{width:45px;height:45px}.vm-scan-card{padding:17px 14px;gap:13px;min-height:145px}.vm-card-copy small{font-size:16px}}
+@media(max-width:760px){body.vm-dashboard main{padding:0 12px calc(94px + env(safe-area-inset-bottom))}.vm-feature-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-bottom:14px}.vm-feature{min-height:91px;gap:9px;border-radius:14px;padding:10px}.vm-feature .vm-big-icon{width:38px;height:38px}.vm-feature strong{font-size:16px;letter-spacing:-.25px}.vm-feature small{font-size:12px}.vm-pinned .grid{grid-template-columns:repeat(3,minmax(0,1fr))}.vm-scan-grid{gap:9px;margin-bottom:13px}.vm-scan-card{grid-template-columns:38px 1fr 12px;gap:8px;min-height:112px;border-radius:17px;padding:12px 10px}.vm-camera-title{gap:4px}.vm-camera-title svg{display:none}.vm-camera-title strong{font-size:16px;letter-spacing:-.3px}.vm-card-copy small{font-size:12px;line-height:1.35}.vm-chev{font-size:23px}.vm-tagline{font-size:15px;margin-top:13px}.vm-brandline{font-size:10px;letter-spacing:.20em}.vm-version{padding:2px 8px;font-size:10px}.vm-hero{min-height:172px;grid-template-columns:minmax(0,1.03fr) minmax(0,1fr);margin-bottom:8px}.vm-hero-copy{padding:20px 0 14px 5px}.vm-wordmark{font-size:clamp(32px,5.8vw,46px)}.vm-bigpaw{width:42px;height:42px}.vm-hero-photo{align-self:center}.vm-hero::after{height:70px;bottom:0}.vm-logo{gap:4px}#nav{width:100%;border-radius:15px 15px 0 0;gap:1px;padding:5px 4px calc(4px + env(safe-area-inset-bottom))}#nav button{font-size:10px;min-height:58px;border-radius:10px;padding:5px 1px}#nav button svg{width:23px;height:23px}main{padding-inline:13px}}
+@media(max-width:500px){.vm-hero{grid-template-columns:1fr;min-height:0;padding-top:0;isolation:isolate}.vm-hero-copy{padding:calc(18px + env(safe-area-inset-top)) 5px 4px}.vm-bigpaw{width:48px;height:48px}.vm-logo{gap:7px}.vm-wordmark{font-size:49px}.vm-brandline{font-size:11px;margin-left:3px;letter-spacing:.22em}.vm-tagline{font-size:16px;margin:9px 0 3px 4px}.vm-hero-photo{width:100%;max-height:174px;object-fit:contain;object-position:center bottom;mask-image:none;-webkit-mask-image:none}.vm-hero::after{bottom:5px;left:-20%}.vm-scan-card{display:flex;flex-wrap:wrap;min-height:135px;align-content:start;gap:6px;padding:11px}.vm-scan-card>.vm-big-icon{width:38px;height:38px}.vm-scan-card .vm-card-copy{width:100%;flex:1;min-width:95px}.vm-scan-card .vm-chev{position:absolute;top:11px;right:10px;font-size:21px}.vm-card-copy small{font-size:11px}.vm-camera-title strong{font-size:16px}.vm-feature .vm-big-icon{width:36px;height:36px}.vm-feature strong{font-size:15px}.vm-feature small{font-size:11px}.vm-pinned .tile .open{font-size:11px}}
+@media(max-width:360px){.vm-version{display:none}.vm-feature{padding:8px;gap:6px}.vm-feature .vm-big-icon{width:30px;height:30px}.vm-feature strong{font-size:14px}.vm-scan-card .vm-card-copy{min-width:85px}.vm-camera-title strong{font-size:15px}#nav button{font-size:9px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+<script src="./vetmate-hero-v22.js?v=22"></script>
+<script id="vm-dashboard-v22-js">
+
+(function(){
+'use strict';
+const prior=render,priorOpen=openCalc,priorEdit=editProfile;
+const heroSrc=window.VETMATE_HERO_V22;
+const blue='#0b8eed',white='#e9f5ff';
+const shapes={
+ home:'<path d="M7 22 24 7l17 15v19H29V29H19v12H7z" fill="none"/>',
+ calc:'<rect x="9" y="4" width="30" height="40" rx="5" fill="#0960af"/><rect x="14" y="9" width="20" height="8" rx="1.5" fill="#d4ecff" stroke="none"/><path d="M15 24h6m-3-3v6m10-3h6M15 36h6m7-2h6m-6 4h6"/>',
+ pill:'<path d="M9 26 26 9a11 11 0 0 1 15 15L24 41A11 11 0 0 1 9 26Z" fill="#0985e3"/><path d="m19 16 13 13"/>',
+ people:'<circle cx="24" cy="12" r="7" fill="#0878d4"/><circle cx="9.5" cy="17" r="5.5" fill="#0878d4"/><circle cx="38.5" cy="17" r="5.5" fill="#0878d4"/><path d="M12 41v-6c0-7 5-12 12-12s12 5 12 12v6zM5 34v-5c0-3 3-6 7-7m24 0c4 1 7 4 7 7v5" fill="#0965b7"/>',
+ heart:'<path d="M24 41 7 24C-4 12 11 1 24 14 37 1 52 12 41 24Z" fill="#0873d0"/><path d="M9 24h10l4-8 5 15 4-7h8"/>',
+ folder:'<path d="M5 12h14l4 5h20v23H5z" fill="#0877cf"/><path d="M8 8h11l4 4h16"/><circle cx="18" cy="25" r="1.8" fill="currentColor"/><circle cx="25" cy="23" r="1.8" fill="currentColor"/><circle cx="32" cy="25" r="1.8" fill="currentColor"/><path d="M18 34q0-6 6-6t6 6q-6 6-12 0z" fill="currentColor"/>',
+ syringe:'<path d="m9 33 6 6 22-22-6-6z" fill="#0a91f0"/><path d="m27 6 15 15m-2-17 4 4m-7-1 5 5M13 36 4 45m19-22 4 4m-9 1 4 4m6-14 4 4"/>',
+ rx:'<path d="M11 5h21l9 9v29H11z" fill="#096dc4"/><path d="M32 5v10h9M19 35V20h6c6 0 6 8 0 8h-6m6 0 10 10m-3-8-8 8"/>',
+ settings:'<path d="m20 5 8 0 1 5 5 3 5-2 4 7-4 4v5l4 3-4 7-5-2-5 3-1 5h-8l-1-5-5-3-5 2-4-7 4-4v-5l-4-3 4-7 5 2 5-3z" fill="#0874c8"/><circle cx="24" cy="24" r="9" fill="#071421"/>',
+ book:'<path d="M24 13Q13 3 4 10v29q12-6 20 1 8-7 20-1V10q-9-7-20 3zm0 0v27" fill="none"/>',
+ camera:'<path d="M5 15h9l4-6h12l5 6h8v25H5z" fill="none"/><circle cx="24" cy="27" r="8" fill="none"/>',
+ scan:'<path d="M15 5H5v10m28-10h10v10M5 33v10h10m28-10v10H33" fill="none"/><ellipse cx="13" cy="19" rx="4" ry="5" fill="#d9efff" stroke="none"/><ellipse cx="22" cy="13" rx="4" ry="5" fill="#d9efff" stroke="none"/><ellipse cx="32" cy="17" rx="4" ry="5" fill="#d9efff" stroke="none"/><ellipse cx="37" cy="25" rx="3.5" ry="5" transform="rotate(20 37 25)" fill="#d9efff" stroke="none"/><path d="M12 33q0-10 11-10t12 10q0 10-12 7T12 33z" fill="#bde4fe" stroke="none"/>',
+ bottle:'<rect x="10" y="4" width="28" height="9" rx="3" fill="#f4f6fa" stroke="#d2deec"/><rect x="12" y="13" width="24" height="31" rx="5" fill="#be6515" stroke="#f0a345"/><rect x="13" y="21" width="22" height="15" rx="1.5" fill="#f4f2e6" stroke="none"/><path d="M17 33v-9h5c5 0 5 5 0 5h-5m4 0 7 6m0-7-7 7" stroke="#163c63" stroke-width="2"/>'
+};
+function glyph(key,big){return '<svg class="'+(big?'vm-big-icon':'vm-glyph')+'" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+(shapes[key]||shapes.calc)+'</svg>'}
+function brand(){return '<svg class="vm-bigpaw" viewBox="0 0 96 96" aria-hidden="true"><defs><linearGradient id="paw22" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#39c4ff"/><stop offset="1" stop-color="#005be4"/></linearGradient></defs><g fill="url(#paw22)" stroke="#1599ff"><ellipse cx="14" cy="37" rx="10" ry="16" transform="rotate(-26 14 37)"/><ellipse cx="34" cy="20" rx="11" ry="17" transform="rotate(-9 34 20)"/><ellipse cx="57" cy="20" rx="11" ry="17" transform="rotate(10 57 20)"/><ellipse cx="77" cy="38" rx="10" ry="16" transform="rotate(28 77 38)"/><path d="M13 72q0-15 21-27 12-8 24 0 22 12 22 27 0 21-22 15-12-4-24 0-21 5-21-15z"/></g><path d="M16 69h16l9-15 9 27 9-16 6 4h12" fill="none" stroke="white" stroke-width="2.8" stroke-linejoin="round" stroke-linecap="round"/></svg>'}
+const routes=[
+['Dashboard','Home','home'],['Quick','Calculators','calc'],['Drugs','Drugs','pill'],['Patients','Patients','scan'],['Reference','Reference','book'],['Settings','Settings','settings']
+];
+function currentNav(){return page==='Breed'?'Patients':page==='Procedures'?'Reference':page==='More'?'Settings':page}
+function setNav(){const n=$('nav');n.innerHTML=routes.map(([p,l,i])=>'<button type="button" class="'+(p===currentNav()?'active':'')+'" aria-current="'+(p===currentNav()?'page':'false')+'" onclick="vmGo(\''+p+'\')">'+glyph(i,false)+'<span>'+l+'</span></button>').join('')}
+function shell(){document.body.classList.toggle('vm-dashboard',page==='Dashboard'&&!active);document.body.classList.toggle('vm-dense',!!load('vm-density-v22',false));setNav()}
+function scrollTop(){window.scrollTo(0,0)}
+window.vmGo=function(p){nav(p);scrollTop()};
+window.vmScanLabel=function(){vmGo('Drugs');let el=document.querySelector('.labelscan');if(el)el.scrollIntoView({block:'start'})};
+window.vmScanBreed=function(){vmGo('Patients');editProfile(false);scrollTop()};
+window.vmDose=function(){vmGo('Quick');openCalc('dose');scrollTop()};
+window.vmBrowse=function(all){browse=!!all;query='';render();scrollTop()};
+window.vmCompact=function(el){persist('vm-density-v22',!!el.checked);document.body.classList.toggle('vm-dense',!!el.checked)};
+window.vmBreedOpen=function(i){if(!profiles[i])return;vmGo('Patients');if(typeof window.vmOpenProfile==='function')window.vmOpenProfile(i);else selectProfile(profiles[i].id);scrollTop()};
+const features=[
+['calc','Calculators','Dosing, fluids, CRI and more','vmGo(\'Quick\')'],
+['pill','Drug Library','Medications, uses and cautions','vmGo(\'Drugs\')'],
+['people','Patient Profiles','Manage patients, records and notes','vmGo(\'Patients\')'],
+['heart','Breed Insights','Common conditions and predispositions','vmGo(\'Breed\')'],
+['folder','Reference','Formula guides and clinical resources','vmGo(\'Reference\')'],
+['syringe','Procedures','Safety checklists and reminders','vmGo(\'Procedures\')'],
+['rx','Quick Doses','Calculate a prescribed dose by weight','vmDose()'],
+['settings','Settings','Favorites and data management','vmGo(\'Settings\')']
+];
+function feature(x){return '<button type="button" class="vm-feature" onclick="'+x[3]+'">'+glyph(x[0],true)+'<span><strong>'+x[1]+'</strong><small>'+x[2]+'</small></span></button>'}
+function scan(icon,title,desc,action){return '<button type="button" class="vm-scan-card" onclick="'+action+'">'+glyph(icon,true)+'<span class="vm-card-copy"><span class="vm-camera-title">'+glyph('camera',false)+'<strong>'+title+'</strong></span><small>'+desc+'</small></span><span class="vm-chev" aria-hidden="true">›</span></button>'}
+function heading(icon,title,sub){return '<div class="vm-subhead">'+glyph(icon,false)+'<div><h2>'+title+'</h2><p>'+sub+'</p></div></div>'}
+function dashboard(){
+$('view').innerHTML='<section class="vm-hero"><div class="vm-hero-copy"><div class="vm-logo">'+brand()+'<div><div class="vm-wordmark">VetMate<sup>™</sup></div><div class="vm-brandline">VETERINARY ASSISTANT</div></div></div><span class="vm-version">V2.2</span><p class="vm-tagline">Less Math. More Care. Smarter Insights.</p></div><img class="vm-hero-photo" alt="Golden retriever and tabby cat together" width="640" height="282"></section><div class="vm-scan-grid">'+scan('bottle','Scan Medication','Take a photo of a drug label to find uses and precautions.','vmScanLabel()')+scan('scan','Identify Breed','Photograph a patient for breed suggestions and health insights.','vmScanBreed()')+'</div><div class="vm-feature-grid">'+features.map(feature).join('')+'</div><section class="vm-pinned"><div class="sectionline"><h3>Favorite Calculators</h3><button type="button" onclick="vmGo(\'Quick\');vmBrowse(true)">Edit ★</button></div>'+tiles(fav.map(id=>lib.find(f=>f.id===id)).filter(Boolean))+(fav.length?'':'<p class="muted">No favorites yet. Star formulas in the calculator library.</p>')+'</section>';
+let img=$('view').querySelector('.vm-hero-photo');if(heroSrc)img.src=heroSrc;else{img.hidden=true}
+}
+function quick(){
+$('view').innerHTML=heading('calc','Calculators','Quick math without a patient profile.')+'<div class="subnav"><button class="'+(!browse?'chosen':'')+'" onclick="vmBrowse(false)">Favorites ★</button><button class="'+(browse?'chosen':'')+'" onclick="vmBrowse(true)">All formulas ('+lib.length+')</button></div>'+(browse?'<input id="search" aria-label="Search formulas" placeholder="Search dose, IV fluid, weight…" value="'+esc(query)+'" oninput="query=this.value;library()"><div id="catalog"></div>':tiles(fav.map(id=>lib.find(f=>f.id===id)).filter(Boolean))+(fav.length?'':'<p class="muted">No favorites yet.</p>')+'<div class="actions"><button class="primary" onclick="vmBrowse(true)">Browse all '+lib.length+' formulas</button></div>')+'<p class="disclaimer">Calculation aid only. Verify the veterinarian’s order and entered units.</p>';if(browse)library()
+}
+function references(){
+$('view').innerHTML=heading('book','Reference','Formula explanations and veterinary resources.')+'<div class="panel"><h3>Calculation reference</h3><p>Every formula includes an explanation of how and why it is used.</p><button class="primary wide" onclick="vmGo(\'Quick\');vmBrowse(true)">Browse formula library</button></div><div class="panel vm-links"><h3>Veterinary reference sources</h3><a href="https://www.aaha.org/resources/2024-aaha-fluid-therapy-guidelines-for-dogs-and-cats/section-3-fluids-for-replacement-and-maintenance/" target="_blank" rel="noopener noreferrer">AAHA — Fluid therapy guidelines ↗</a><a href="https://animaldrugsatfda.fda.gov/adafda/views/#/search" target="_blank" rel="noopener noreferrer">FDA — Animal drug labels ↗</a><a href="https://dailymed.nlm.nih.gov/dailymed/" target="_blank" rel="noopener noreferrer">DailyMed — Drug labeling ↗</a><a href="https://www.vet.cornell.edu/departments-centers-and-institutes/cornell-feline-health-center" target="_blank" rel="noopener noreferrer">Cornell Feline Health Center ↗</a><a href="https://ofa.org/chic-programs/" target="_blank" rel="noopener noreferrer">OFA — Breed screening information ↗</a></div><button class="wide" onclick="vmGo(\'Procedures\')">Open procedure safety checklists</button><p class="disclaimer">Starter reference library. Comprehensive validated vital and laboratory ranges are not yet included.</p>'
+}
+function procedures(){
+const groups=[['Medication preparation',['Verify patient identity and current weight.','Compare the active ingredient, strength, formulation and route with the veterinarian’s order.','Check decimal placement and units independently.','Follow clinic policy for independent double-checks and documentation.']],['Fluid or infusion verification',['Check the authorized volume or rate and time units.','Verify the actual solution concentration and equipment settings.','Confirm the monitoring plan with the veterinary team.','Recheck calculations when the order changes.']],['Patient documentation',['Confirm correct patient profile.','Save the calculation with its original inputs and time.','Document actual administration or procedures separately in the approved clinical record.']]];
+$('view').innerHTML=heading('syringe','Procedures','Practical safety and verification checklists.')+'<p class="context">These are math and documentation reminders, not full treatment or procedure protocols. Follow your clinic’s approved protocols.</p>'+groups.map(g=>'<details class="panel" open><summary>'+g[0]+'</summary>'+g[1].map(t=>'<label class="vm-check"><input type="checkbox"><span>'+t+'</span></label>').join('')+'</details>').join('')+'<p class="muted">Checklist marks reset when you leave this screen.</p><button class="wide" onclick="vmGo(\'Reference\')">Clinical reference resources</button>'
+}
+function breed(){
+$('view').innerHTML=heading('heart','Breed Insights','AI photo suggestions and general breed health references.')+'<div class="panel"><h3>Identify a patient’s breed</h3><p>Take or choose a photo, review the suggested breed, or enter it yourself. Confirm before saving.</p><button class="primary wide" onclick="vmScanBreed()">Identify Breed · New patient</button></div><h3>Existing patient profiles</h3><div class="vm-patient-list">'+(profiles.length?profiles.map((p,i)=>'<button onclick="vmBreedOpen('+i+')">'+avatar(p)+'<span><strong>'+esc(p.name)+'</strong><br><small>'+esc(p.species)+' · '+esc(p.breed||'Breed not recorded')+'</small></span><b>›</b></button>').join(''):'<p class="muted">No saved patient profiles.</p>')+'</div><p class="disclaimer">Photo-based breed suggestions may be wrong, particularly for mixed breeds and cats. Breed predispositions are educational and do not describe the patient’s actual medical history.</p>'
+}
+function settings(){
+$('view').innerHTML=heading('settings','Settings','Customize your VetMate experience.')+'<div class="panel"><h3>Appearance</h3><label class="vm-check"><input type="checkbox" '+(load('vm-density-v22',false)?'checked':'')+' onchange="vmCompact(this)"><span>Compact dashboard cards</span></label><h3>Favorites</h3><button class="wide" onclick="vmGo(\'Quick\');vmBrowse(true)">Manage favorite calculators</button></div><div class="panel"><h3>Data & privacy</h3><p>'+profiles.length+' patient profiles · '+history.length+' saved calculations on this browser.</p><button class="wide" onclick="exportHistory()">Export calculation history (CSV)</button><p class="disclaimer">The existing storage is local and not clinically encrypted or synced. An export is not a full patient backup; it may contain sensitive data. Use fictional patients for testing.</p></div><div class="panel"><h3>VetMate V2.2 · Dashboard edition</h3><p>27 calculators, a 28-entry medication library, patient profiles, beta breed recognition and beta label scanning.</p><p>Less Math. More Care. Smarter Insights.</p><p class="disclaimer">Not clinically validated. Camera and recognition features require device testing; model downloads need internet access.</p></div>'
+}
+render=function(){
+document.body.classList.toggle('vm-dashboard',page==='Dashboard'&&!active);
+if(!active&&page==='Dashboard')dashboard();
+else if(!active&&page==='Quick')quick();
+else if(!active&&page==='Reference')references();
+else if(!active&&page==='Procedures')procedures();
+else if(!active&&page==='Breed')breed();
+else if(!active&&(page==='Settings'||page==='More'))settings();
+else prior();
+shell()
+};
+openCalc=function(id){if(page==='Dashboard'){page='Quick';selected=null;browse=false;query=''}priorOpen(id);shell();scrollTop()};
+editProfile=function(edit){priorEdit(edit);let original=$('view').querySelector('input[type=file][accept="image/*"]');if(!original)return;let group=document.createElement('div');group.className='vm-button-row';let take=document.createElement('button');take.type='button';take.className='primary';take.textContent='Take patient photo';let choose=document.createElement('button');choose.type='button';choose.textContent='Choose photo';let cam=document.createElement('input');cam.type='file';cam.accept='image/*';cam.setAttribute('capture','environment');cam.hidden=true;cam.onchange=()=>readPhoto(cam);take.onclick=()=>cam.click();choose.onclick=()=>original.click();original.hidden=true;group.append(take,choose,cam);original.before(group)};
+document.querySelector('header h1').innerHTML='Vet<span style="color:#139dff">Mate</span>';
+document.querySelector('header p').textContent='Less Math. More Care. Smarter Insights.';
+document.querySelector('header .edition').textContent='V2.2';
+document.title='VetMate — Veterinary Assistant';
+page='Dashboard';active=null;browse=false;render();
+})();
+</script>
+</html>
