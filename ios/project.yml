@@ -18,11 +18,12 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.vetmate.clinicalassistant
-        MARKETING_VERSION: "1.0.0"
+        MARKETING_VERSION: "1.2.0"
         CURRENT_PROJECT_VERSION: "1"
         TARGETED_DEVICE_FAMILY: "1"
         GENERATE_INFOPLIST_FILE: YES
         INFOPLIST_KEY_CFBundleDisplayName: VetMate AI
         INFOPLIST_KEY_NSCameraUsageDescription: Take patient and medication label photos for optional identification.
+        INFOPLIST_KEY_NSMicrophoneUsageDescription: Record audio when capturing farm animal videos for veterinary review.
         INFOPLIST_KEY_NSPhotoLibraryUsageDescription: Choose patient or medication label photos.
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
