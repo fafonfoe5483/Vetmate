@@ -486,4 +486,28 @@ patientView=function(){previousPatient();if(current()&&profileTab==='Overview'){
 render();
 })();
 </script>
-</html>
+
+<style id="vm-formula-display-style">
+.vm-formula-display{margin:16px 0 0;padding:15px;border:1px solid #2967a5;border-radius:13px;background:#101e30}.vm-formula-display h3{margin:0 0 8px;color:#66bbff;font-size:15px}.vm-formula-display .equation{font-size:18px;font-weight:650;line-height:1.6;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}.vm-formula-display p{margin:7px 0;font-size:13px;color:#d2deed}
+</style>
+<script id="vm-formula-display">
+(function(){
+'use strict';
+const previous=calcView;
+calcView=function(){
+ previous();
+ const f=active, out=$('out');if(!f||!out)return;
+ const panel=out.closest('.panel')||out.parentElement;
+ if(!panel||panel.querySelector('.vm-formula-display'))return;
+ for(const p of panel.querySelectorAll('p'))if(p.textContent.trim().startsWith('Formula:')&&p.textContent.includes(f.formula))p.remove();
+ const block=document.createElement('section');block.className='vm-formula-display';
+ const title=document.createElement('h3');title.textContent='Actual formula used';
+ const equation=document.createElement('div');equation.className='equation';equation.textContent=f.unit+' = '+f.formula;
+ const hint=document.createElement('p');hint.textContent='Input units: '+f.fields.map(x=>x[0]).join(' • ');
+ block.append(title,equation,hint);
+ if(f.fields.some(x=>x[1]==='kg')){const p=document.createElement('p');p.textContent='If weight is entered in pounds, convert to kg first: lb × 0.45359237.';block.append(p)}
+ if(f.id==='dose'||f.id==='dilution'){const p=document.createElement('p');p.textContent=f.id==='dose'?'Intermediate amount (mg) = kg × prescribed mg/kg.':'Diluent (mL) = final volume − stock volume.';block.append(p)}
+ panel.append(block);
+};
+})();
+</script></html>
