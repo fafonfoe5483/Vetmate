@@ -461,4 +461,29 @@ const priorPatient=patientView;
 patientView=function(){priorPatient();let p=current(),root=$('profileBody');if(!p||!root||profileTab!=='Overview')return;let panel=document.createElement('section');panel.className='panel';let h=document.createElement('h3');h.textContent='Owner contact';panel.append(h);for(let [k,label] of ownerFields){if(!p[k])continue;let row=document.createElement('p');row.textContent=label+': '+p[k];panel.append(row)}if(!ownerFields.some(([k])=>p[k])){let t=document.createElement('p');t.textContent='No owner contact recorded.';panel.append(t)}let m=document.createElement('p');m.textContent='Recorded medications: '+((p.currentMeds||[]).join(', ')||'Not entered');panel.append(m);let b=document.createElement('button');b.textContent='Edit details';b.onclick=()=>editProfile(true);panel.append(b);root.prepend(panel);root.append(checker(p.currentMeds||[],p.species))};
 render();
 })();
-</script></html>
+</script>
+<style id="vetspire-preview-style">
+.vm-vetspire{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:14px 16px;margin:0 0 14px;border:1px solid #218dff;border-radius:16px;background:linear-gradient(130deg,#103e76,#101c2c);color:#f3f8ff;min-height:64px}.vm-vetspire svg{width:28px;height:28px;flex:none;color:#69c6ff}.vm-vetspire .vm-sync-copy{flex:1;min-width:0}.vm-vetspire strong,.vm-vetspire small{display:block}.vm-vetspire small{color:#bfd3e9;font-size:12px;margin-top:4px}.vm-vetspire .vm-sync-tag{font-size:10px;letter-spacing:.05em;color:#a8d8ff;border:1px solid #4385bd;border-radius:12px;padding:5px 8px;white-space:nowrap}.vm-sync-info{padding:14px;margin:0 0 14px;border:1px solid #29476a;border-radius:13px;background:#101e30;color:#dbe9fa}.vm-sync-info[hidden]{display:none}.vm-sync-info p{font-size:13px;line-height:1.5;margin:6px 0}
+</style>
+<script id="vetspire-preview">
+(function(){
+'use strict';
+function mount(root,before){
+ if(!root||root.querySelector('.vm-vetspire'))return;
+ const group=document.createElement('section');
+ const button=document.createElement('button');
+ button.type='button';button.className='vm-vetspire';button.setAttribute('aria-expanded','false');
+ button.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5"/><path d="M5.5 8a8 8 0 0 1 13.3-2L20 12M4 12l1.2 6a8 8 0 0 0 13.3-2"/></svg><span class="vm-sync-copy"><strong>Sync to Vetspire</strong><small>Clinic integration · Not connected</small></span><span class="vm-sync-tag">COMING SOON</span>';
+ const info=document.createElement('div');info.className='vm-sync-info';info.hidden=true;
+ info.innerHTML='<strong>Vetspire integration is coming</strong><p>Planned: import patient details and weight, then transfer reviewed calculations, vitals, lab notes and treatment summaries to the correct Vetspire record.</p><p>Clinic authorization, secure API access and validation are required. No records are being sent or retrieved. Vetspire remains the official medical record.</p>';
+ button.onclick=()=>{info.hidden=!info.hidden;button.setAttribute('aria-expanded',String(!info.hidden))};
+ group.append(button,info);root.insertBefore(group,before||null);
+}
+const previousRender=render;
+render=function(){previousRender();if(page==='Dashboard'&&!active){const root=$('view');mount(root,root?.querySelector('.vm-feature-grid'))}};
+const previousPatient=patientView;
+patientView=function(){previousPatient();if(current()&&profileTab==='Overview'){const root=$('profileBody');mount(root,root?.firstChild)}};
+render();
+})();
+</script>
+</html>
