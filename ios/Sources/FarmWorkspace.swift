@@ -269,7 +269,8 @@ struct FarmReport: View {
     @ObservedObject var store: FarmStore
     let initialAnimal: UUID?
     let phone: String
-    @State private var animalID: UUID?
+    @State private var animalID: UUID? = nil
+    @State private var reportDate = Date()
     @State private var species = FarmSpecies.goat
     @State private var name = ""
     @State private var symptoms = ""
@@ -288,7 +289,7 @@ struct FarmReport: View {
     private var animal: FarmAnimal? { store.animals.first { $0.id == animalID } }
     private var report: String {
         let identity = animal.map { $0.name + " (" + $0.species.rawValue + "), tag: " + $0.tag + ", weight: " + $0.weight } ?? name + " (" + species.rawValue + ")"
-        return ["VetMate Farm • veterinary assessment request", Date().formatted(), "Animal: " + identity, "Concern: " + symptoms, "Onset: " + onset, "Observed signs / measurements: " + observations, "Possible concerns / reviewed notes: " + findings, "Care already provided: " + care, "Urgent signs reported: " + (redFlags ? "Yes — call veterinarian directly" : "Not selected; absence of an emergency is not established"), "Media attachments: " + String(attachments.count), "Owner-entered observations; not an AI diagnosis. Please advise next steps."].joined(separator: "\n\n")
+        return ["VetMate Farm • veterinary assessment request", reportDate.formatted(), "Animal: " + identity, "Concern: " + symptoms, "Onset: " + onset, "Observed signs / measurements: " + observations, "Possible concerns / reviewed notes: " + findings, "Care already provided: " + care, "Urgent signs reported: " + (redFlags ? "Yes — call veterinarian directly" : "Not selected; absence of an emergency is not established"), "Media attachments: " + String(attachments.count), "Owner-entered observations; not an AI diagnosis. Please advise next steps."].joined(separator: "\n\n")
     }
     var body: some View {
         Form {
@@ -346,7 +347,7 @@ struct FarmReport: View {
         Section("Photos & videos") {
             Button { camera = true } label: { Label("Take photo or video", systemImage: "camera.fill") }
                 .disabled(!UIImagePickerController.isSourceTypeAvailable(.camera) || busy || attachments.count >= 5)
-            PhotosPicker(selection: $selected, maxSelectionCount: 5, matching: .any(of: [.images,.videos])) {
+            PhotosPicker(selection: $selected, maxSelectionCount: 5, matching: .any(of: [.images, .videos])) {
                 Label("Choose photos or videos", systemImage: "photo.on.rectangle")
             }.disabled(busy || attachments.count >= 5)
             ForEach(attachments) { a in
