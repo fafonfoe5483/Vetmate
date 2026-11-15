@@ -327,26 +327,49 @@ struct DoseCheck: View {
     @State private var dose = ""
     @State private var concentration = ""
     @State private var expected = ""
-    var result: Double? {
-        guard let w = Double(weight), let d = Double(dose), let c = Double(concentration), w > 0, d > 0, c > 0 else { return nil }
-        let v = w*d/c
+
+    private var result: Double? {
+        guard let w = Double(weight), let d = Double(dose), let c = Double(concentration),
+              w.isFinite, d.isFinite, c.isFinite, w > 0, d > 0, c > 0 else { return nil }
+        let v = w * d / c
         return v.isFinite && v > 0 ? v : nil
     }
-    var body: some View {
-        Form {
-            Text("Only use a veterinarian-prescribed dose and verified label concentration. This is arithmetic, not a safe-dose check.").foregroundStyle(.orange)
+    private var difference: Double? {
+        guard let v = result, let e = Double(expected), e.isFinite, e > 0 else { return nil }
+        return abs(e - v)
+    }
+    private func display(_ value: Double) -> String {
+        String(format: "%.8g", value)
+    }
+    private var inputs: some View {
+        Section("Verified prescription and label") {
             TextField("Weight (kg)", text: $weight).keyboardType(.decimalPad)
             TextField("Ordered dose (mg/kg)", text: $dose).keyboardType(.decimalPad)
             TextField("Concentration (mg/mL)", text: $concentration).keyboardType(.decimalPad)
             TextField("Independently calculated volume (mL)", text: $expected).keyboardType(.decimalPad)
-            if let v = result {
-                Text("Calculated: " + v.formatted(.number.precision(.significantDigits(1...8))) + " mL").font(.title2.bold())
-                if let e = Double(expected), e.isFinite, e > 0 {
-                    Text("Absolute difference: " + abs(e-v).formatted(.number.precision(.significantDigits(1...8))) + " mL")
+        }
+    }
+    @ViewBuilder private var output: some View {
+        if let v = result {
+            Section("Arithmetic result") {
+                Text("Calculated: " + display(v) + " mL").font(.title2.bold())
+                if let delta = difference {
+                    Text("Absolute difference: " + display(delta) + " mL")
                 }
                 Text("No automatic rounding or clinical approval. Verify syringe precision and order with the veterinary team.")
             }
-        }.navigationTitle("Dose Check")
+        }
+    }
+    var body: some View {
+        Form {
+            Text("Only use a veterinarian-prescribed dose and verified label concentration. This is arithmetic, not a safe-dose check.").foregroundStyle(.orange)
+            inputs
+            output
+            Section("Actual formula used") {
+                Text("Volume (mL) = weight (kg) × dose (mg/kg) ÷ concentration (mg/mL)")
+            }
+        }
+        .navigationTitle("Dose Check")
     }
 }
 struct PracticeTimer: View {
