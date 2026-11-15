@@ -1,0 +1,98 @@
+name: VetMate TestFlight
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: vetmate-testflight
+  cancel-in-progress: false
+jobs:
+  release:
+    if: github.ref == 'refs/heads/main'
+    runs-on: macos-15
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 2bef6acc1a4fe261486d21bff01c98feb15624e3
+          persist-credentials: false
+      - name: Select supported Xcode
+        run: |
+          set -euo pipefail
+          XCODE=$(find /Applications -maxdepth 1 -name 'Xcode_26*.app' | sort | tail -1)
+          test -n "$XCODE"
+          sudo xcode-select -s "$XCODE/Contents/Developer"
+          xcodebuild -version
+      - name: Prepare project and icon
+        run: |
+          set -euo pipefail
+          brew install xcodegen
+          mkdir -p ios/Web ios/Sources/Assets.xcassets/AppIcon.appiconset
+          cp index.html vetmate-hero-v22.js ios/Web/
+          swift ios/MakeIcon.swift ios/Sources/Assets.xcassets/AppIcon.appiconset/AppIcon.png
+          echo '{"images":[{"filename":"AppIcon.png","idiom":"universal","platform":"ios","size":"1024x1024"}],"info":{"author":"xcode","version":1}}' > ios/Sources/Assets.xcassets/AppIcon.appiconset/Contents.json
+          echo '{"info":{"author":"xcode","version":1}}' > ios/Sources/Assets.xcassets/Contents.json
+          cd ios
+          xcodegen generate
+      - name: Install signing credentials
+        env:
+          CERT: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
+          PROFILE: ${{ secrets.BUILD_PROVISION_PROFILE_BASE64 }}
+          P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
+        run: |
+          set -euo pipefail
+          umask 077
+          test -n "$CERT" && test -n "$PROFILE" && test -n "$P12_PASSWORD"
+          printf '%s' "$CERT" | tr -d '[:space:]' | base64 -D > "$RUNNER_TEMP/vetmate.p12"
+          printf '%s' "$PROFILE" | tr -d '[:space:]' | base64 -D > "$RUNNER_TEMP/vetmate.mobileprovision"
+          KC="$RUNNER_TEMP/vetmate.keychain-db"
+          PASS=$(openssl rand -hex 32)
+          security create-keychain -p "$PASS" "$KC"
+          security set-keychain-settings -lut 3600 "$KC"
+          security unlock-keychain -p "$PASS" "$KC"
+          security import "$RUNNER_TEMP/vetmate.p12" -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k "$KC"
+          security set-key-partition-list -S apple-tool:,apple: -s -k "$PASS" "$KC" >/dev/null
+          security list-keychains -d user -s "$KC"
+          security find-identity -v -p codesigning "$KC"
+          security cms -D -i "$RUNNER_TEMP/vetmate.mobileprovision" > "$RUNNER_TEMP/profile.plist"
+          UUID=$(/usr/libexec/PlistBuddy -c 'Print UUID' "$RUNNER_TEMP/profile.plist")
+          APP=$(/usr/libexec/PlistBuddy -c 'Print Entitlements:application-identifier' "$RUNNER_TEMP/profile.plist")
+          test "$APP" = '89KEN9U38P.com.vetmate.clinicalassistant'
+          mkdir -p "$HOME/Library/MobileDevice/Provisioning Profiles" "$HOME/Library/Developer/Xcode/UserData/Provisioning Profiles"
+          cp "$RUNNER_TEMP/vetmate.mobileprovision" "$HOME/Library/MobileDevice/Provisioning Profiles/$UUID.mobileprovision"
+          cp "$RUNNER_TEMP/vetmate.mobileprovision" "$HOME/Library/Developer/Xcode/UserData/Provisioning Profiles/$UUID.mobileprovision"
+          echo "PROFILE_UUID=$UUID" >> "$GITHUB_ENV"
+      - name: Archive signed iPhone build
+        run: |
+          set -euo pipefail
+          cd ios
+          xcodebuild -project VetMate.xcodeproj -scheme VetMate -configuration Release -destination 'generic/platform=iOS' -archivePath "$RUNNER_TEMP/VetMate.xcarchive" DEVELOPMENT_TEAM=89KEN9U38P CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY="Apple Distribution" PROVISIONING_PROFILE_SPECIFIER="$PROFILE_UUID" CURRENT_PROJECT_VERSION="$GITHUB_RUN_NUMBER" ASSETCATALOG_COMPILER_APPICON_NAME=AppIcon archive
+      - name: Export signed IPA
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import plistlib, os
+          d=dict(method='app-store-connect', signingStyle='manual', teamID='89KEN9U38P', signingCertificate='Apple Distribution', provisioningProfiles={'com.vetmate.clinicalassistant':os.environ['PROFILE_UUID']}, manageAppVersionAndBuildNumber=False)
+          with open(os.environ['RUNNER_TEMP']+'/ExportOptions.plist','wb') as f: plistlib.dump(d,f)
+          PY
+          xcodebuild -exportArchive -archivePath "$RUNNER_TEMP/VetMate.xcarchive" -exportPath "$RUNNER_TEMP/export" -exportOptionsPlist "$RUNNER_TEMP/ExportOptions.plist"
+      - name: Upload beta to App Store Connect
+        env:
+          KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+          ISSUER: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+          PRIVATE_KEY: ${{ secrets.APP_STORE_CONNECT_PRIVATE_KEY }}
+        run: |
+          set -euo pipefail
+          umask 077
+          test -n "$KEY_ID" && test -n "$ISSUER" && test -n "$PRIVATE_KEY"
+          mkdir -p "$HOME/.appstoreconnect/private_keys"
+          printf '%s\n' "$PRIVATE_KEY" > "$HOME/.appstoreconnect/private_keys/AuthKey_$KEY_ID.p8"
+          IPA=$(find "$RUNNER_TEMP/export" -name '*.ipa' -type f | head -1)
+          test -n "$IPA"
+          xcrun altool --upload-app -f "$IPA" -t ios --apiKey "$KEY_ID" --apiIssuer "$ISSUER"
+      - name: Clean up signing material
+        if: always()
+        run: |
+          security delete-keychain "$RUNNER_TEMP/vetmate.keychain-db" || true
+          rm -f "$RUNNER_TEMP/vetmate.p12" "$RUNNER_TEMP/vetmate.mobileprovision" "$RUNNER_TEMP/profile.plist"
+          rm -rf "$HOME/.appstoreconnect/private_keys"
