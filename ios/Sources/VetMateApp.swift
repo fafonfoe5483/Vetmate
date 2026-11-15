@@ -14,6 +14,7 @@ struct ContentView: View {
         TabView(selection: $tab) {
             WebApp().tabItem { Label("VetMate", systemImage: "pawprint.fill") }.tag(0)
             LabelScanner().tabItem { Label("Label Scan", systemImage: "viewfinder") }.tag(1)
+            ClinicalWorkspace().tabItem { Label("Clinical", systemImage: "heart.text.square") }.tag(2)
         }.tint(.blue)
     }
 }
