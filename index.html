@@ -182,6 +182,7 @@ body{background:#080c13!important}body::before{display:none}header{position:rela
 const H=()=>document.getElementById('view');
 const oldEdit=editProfile,oldCalcUI=calcView,oldList=profileList;
 let profileTab='Overview',patientFilter='All',drugFilter='';
+window.vmCurrentProfileTab=()=>profileTab;
 const icons={Home:'<path d="M3 10 12 3l9 7v11h-6v-7H9v7H3z"/>',More:'<circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/>',Patients:'<ellipse cx="5" cy="8" rx="2" ry="3"/><ellipse cx="10" cy="5" rx="2" ry="3"/><ellipse cx="15" cy="5" rx="2" ry="3"/><ellipse cx="20" cy="8" rx="2" ry="3"/><path d="M5 17c0-4 4-8 7-8s7 4 7 8c0 5-4 4-7 2-3 2-7 3-7-2z"/>',Drugs:'<path d="M12 5v15M12 5C9 3 5 3 2 5v14c4-2 7-2 10 1 3-3 6-3 10-1V5c-3-2-7-2-10 0z"/>'};
 Object.assign(vmIcons,icons);
 const heading=(k,t,s)=>'<div class="pagehead"><span class="tile-icon">'+vmIcon(k)+'</span><div><h2>'+t+'</h2><p>'+s+'</p></div></div>';
@@ -458,7 +459,7 @@ editProfile=function(edit){let p=edit?current():null;originalEdit(edit);let form
  let l=document.createElement('label');l.htmlFor='currentMeds';l.textContent='Current medications (select confirmed active ingredients)';let sel=document.createElement('select');sel.id='currentMeds';sel.multiple=true;sel.size=6;meds.slice().sort((a,b)=>a[0].localeCompare(b[0])).forEach(m=>{let o=document.createElement('option');o.value=m[0];o.textContent=m[0];o.selected=(p?.currentMeds||[]).includes(m[0]);sel.append(o)});sec.append(l,sel);form.querySelector('.actions').before(sec)
 };
 const priorPatient=patientView;
-patientView=function(){priorPatient();let p=current(),root=$('profileBody');if(!p||!root||profileTab!=='Overview')return;let panel=document.createElement('section');panel.className='panel';let h=document.createElement('h3');h.textContent='Owner contact';panel.append(h);for(let [k,label] of ownerFields){if(!p[k])continue;let row=document.createElement('p');row.textContent=label+': '+p[k];panel.append(row)}if(!ownerFields.some(([k])=>p[k])){let t=document.createElement('p');t.textContent='No owner contact recorded.';panel.append(t)}let m=document.createElement('p');m.textContent='Recorded medications: '+((p.currentMeds||[]).join(', ')||'Not entered');panel.append(m);let b=document.createElement('button');b.textContent='Edit details';b.onclick=()=>editProfile(true);panel.append(b);root.prepend(panel);root.append(checker(p.currentMeds||[],p.species))};
+patientView=function(){priorPatient();let p=current(),root=$('profileBody');if(!p||!root||window.vmCurrentProfileTab()!=='Overview')return;let panel=document.createElement('section');panel.className='panel';let h=document.createElement('h3');h.textContent='Owner contact';panel.append(h);for(let [k,label] of ownerFields){if(!p[k])continue;let row=document.createElement('p');row.textContent=label+': '+p[k];panel.append(row)}if(!ownerFields.some(([k])=>p[k])){let t=document.createElement('p');t.textContent='No owner contact recorded.';panel.append(t)}let m=document.createElement('p');m.textContent='Recorded medications: '+((p.currentMeds||[]).join(', ')||'Not entered');panel.append(m);let b=document.createElement('button');b.textContent='Edit details';b.onclick=()=>editProfile(true);panel.append(b);root.prepend(panel);root.append(checker(p.currentMeds||[],p.species))};
 render();
 })();
 </script>
@@ -482,7 +483,7 @@ function mount(root,before){
 const previousRender=render;
 render=function(){previousRender();if(page==='Dashboard'&&!active){const root=$('view');mount(root,root?.querySelector('.vm-feature-grid'))}};
 const previousPatient=patientView;
-patientView=function(){previousPatient();if(current()&&profileTab==='Overview'){const root=$('profileBody');mount(root,root?.firstChild)}};
+patientView=function(){previousPatient();if(current()&&window.vmCurrentProfileTab()==='Overview'){const root=$('profileBody');mount(root,root?.firstChild)}};
 render();
 })();
 </script>
