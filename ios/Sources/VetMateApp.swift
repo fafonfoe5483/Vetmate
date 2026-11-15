@@ -3,8 +3,17 @@ import WebKit
 import Vision
 import PhotosUI
 import LocalAuthentication
+import UserNotifications
+
+final class VetMateNotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler([.banner, .list, .sound])
+    }
+}
 
 @main struct VetMateApp: App {
+    private let notificationDelegate = VetMateNotificationDelegate()
+    init() { UNUserNotificationCenter.current().delegate = notificationDelegate }
     var body: some Scene { WindowGroup { ContentView().preferredColorScheme(.dark) } }
 }
 
