@@ -14,7 +14,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: 68e70685c14669d901dde6d37a496dcbbd7abb64
+          ref: a3208b74b62e258b9a9e9643d3988f82e97149f0
           persist-credentials: false
       - name: Select supported Xcode
         run: |
@@ -66,7 +66,7 @@ jobs:
         run: |
           set -euo pipefail
           cd ios
-          xcodebuild -project VetMate.xcodeproj -scheme VetMate -configuration Release -destination 'generic/platform=iOS' -archivePath "$RUNNER_TEMP/VetMate.xcarchive" DEVELOPMENT_TEAM=89KEN9U38P CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY="Apple Distribution" PROVISIONING_PROFILE_SPECIFIER="$PROFILE_UUID" MARKETING_VERSION=1.1.0 CURRENT_PROJECT_VERSION="$GITHUB_RUN_NUMBER" ASSETCATALOG_COMPILER_APPICON_NAME=AppIcon archive
+          xcodebuild -project VetMate.xcodeproj -scheme VetMate -configuration Release -destination 'generic/platform=iOS' -archivePath "$RUNNER_TEMP/VetMate.xcarchive" DEVELOPMENT_TEAM=89KEN9U38P CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY="Apple Distribution" PROVISIONING_PROFILE_SPECIFIER="$PROFILE_UUID" MARKETING_VERSION=1.2.0 CURRENT_PROJECT_VERSION="$GITHUB_RUN_NUMBER" ASSETCATALOG_COMPILER_APPICON_NAME=AppIcon archive
       - name: Export signed IPA
         run: |
           set -euo pipefail
