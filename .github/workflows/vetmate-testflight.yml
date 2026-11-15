@@ -14,7 +14,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: 7345100cad8a76cb581ef12cdaecdd5719e2a7a2
+          ref: 68e70685c14669d901dde6d37a496dcbbd7abb64
           persist-credentials: false
       - name: Select supported Xcode
         run: |
