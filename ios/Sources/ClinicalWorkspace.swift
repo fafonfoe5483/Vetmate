@@ -19,6 +19,7 @@ struct ClinicalTask: Codable, Identifiable {
     var id = UUID()
     var title: String
     var due: Date
+    var notificationRequested: Bool? = nil
     var completed: Date? = nil
 }
 struct ClinicalCase: Codable, Identifiable {
@@ -74,6 +75,9 @@ struct ClinicalWorkspace: View {
                         name = ""
                     }.disabled(name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || store.error != nil)
                 }
+                Section("All patient reminders") {
+                    NavigationLink { AllPatientReminders(store: store) } label: { Label("Upcoming & overdue", systemImage: "bell.badge") }
+                }
                 Section("Clinical records") {
                     ForEach(store.cases) { c in
                         NavigationLink { CaseWorkspace(store: store, id: c.id) } label: {
@@ -81,7 +85,9 @@ struct ClinicalWorkspace: View {
                         }
                     }.onDelete { offsets in
                         var next = store.cases
+                        let removed = offsets.flatMap { next[$0].tasks.map { PatientNotification.key($0.id) } }
                         next.remove(atOffsets: offsets); store.save(next)
+                        if store.error == nil { PatientNotification.cancel(removed) }
                     }
                 }
                 Section("Quick tools") {
@@ -105,7 +111,12 @@ struct CaseWorkspace: View {
     @ObservedObject var store: ClinicalStore
     let id: UUID
     @State private var task = ""
-    @State private var due = Date()
+    @State private var due = Date().addingTimeInterval(900)
+    @State private var timeMode = "Countdown"
+    @State private var minutes = 15
+    @State private var notify = true
+    @State private var notificationStatus = ""
+    @State private var scheduling = false
     @State private var note = ""
     @State private var pdf: URL?
     @State private var reportError = ""
@@ -123,30 +134,65 @@ struct CaseWorkspace: View {
                 }
                 Section("Treatment checklist") {
                     TextField("Task from veterinarian's order", text: $task)
-                    DatePicker("Due", selection: $due)
-                    Button("Add task") {
-                        let t = ClinicalTask(title: task, due: due)
-                        store.change(id) { $0.tasks.append(t) }; task = ""
-                    }.disabled(task.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
-                    ForEach(c.tasks.sorted { $0.due < $1.due }) { t in
-                        Button {
-                            store.change(id) { item in
-                                if let i = item.tasks.firstIndex(where: { $0.id == t.id }) {
-                                    item.tasks[i].completed = item.tasks[i].completed == nil ? Date() : nil
-                                }
+                    Picker("Reminder type", selection: $timeMode) {
+                        Text("Countdown").tag("Countdown")
+                        Text("Exact date / time").tag("Exact")
+                    }.pickerStyle(.segmented)
+                    if timeMode == "Countdown" {
+                        Picker("Check in", selection: $minutes) {
+                            ForEach([5,10,15,20,30,45,60,90,120,180,240], id: \.self) { m in Text("\(m) min").tag(m) }
+                        }
+                        Stepper("Custom: \(minutes) min", value: $minutes, in: 1...1440)
+                    } else { DatePicker("Due", selection: $due, in: Date()...) }
+                    Toggle("iPhone notification", isOn: $notify)
+                    Button(scheduling ? "Scheduling…" : "Add patient reminder") {
+                        let deadline = timeMode == "Countdown" ? Date().addingTimeInterval(Double(minutes)*60) : due
+                        guard deadline.timeIntervalSinceNow > 1 else { notificationStatus = "Choose a future time."; return }
+                        let t = ClinicalTask(title: task.trimmingCharacters(in: .whitespacesAndNewlines), due: deadline, notificationRequested: notify)
+                        store.change(id) { $0.tasks.append(t) }
+                        guard store.error == nil else { notificationStatus = "Not saved."; return }
+                        task = ""
+                        if notify {
+                            scheduling = true
+                            Task {
+                                notificationStatus = await PatientNotification.schedule(t, patient: c.name)
+                                scheduling = false
                             }
-                        } label: {
-                            HStack {
-                                Image(systemName: t.completed == nil ? "circle" : "checkmark.circle.fill")
-                                VStack(alignment: .leading) {
-                                    Text(t.title)
-                                    Text(t.due.formatted()).font(.caption)
-                                    if let done = t.completed { Text("Checked " + done.formatted()).font(.caption) }
-                                }
+                        } else { notificationStatus = "Saved to checklist only." }
+                    }.disabled(scheduling || store.error != nil || task.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                    if !notificationStatus.isEmpty { Text(notificationStatus).font(.caption).foregroundStyle(.orange) }
+                    ForEach(c.tasks.sorted { $0.due < $1.due }) { t in
+                        HStack {
+                            VStack(alignment: .leading) {
+                                Text(t.title).bold()
+                                Text(t.due.formatted()).font(.caption)
+                                if let done = t.completed { Text("Completed " + done.formatted()).font(.caption) }
+                                else if t.due <= Date() { Text("Due / overdue").foregroundStyle(.orange).font(.caption) }
+                                else { Text(t.notificationRequested == true ? "Notification requested" : "Checklist only").font(.caption) }
+                            }
+                            Spacer()
+                            if t.completed == nil {
+                                Button("Done") {
+                                    store.change(id) { item in
+                                        if let i = item.tasks.firstIndex(where: { $0.id == t.id }) { item.tasks[i].completed = Date() }
+                                    }
+                                    if store.error == nil { PatientNotification.cancel([PatientNotification.key(t.id)]) }
+                                }.buttonStyle(.borderless)
+                            }
+                            Button(role: .destructive) {
+                                store.change(id) { $0.tasks.removeAll { $0.id == t.id } }
+                                if store.error == nil { PatientNotification.cancel([PatientNotification.key(t.id)]) }
+                            } label: { Image(systemName: "trash") }.buttonStyle(.borderless)
+                        }.swipeActions {
+                            if t.completed == nil && t.due > Date() && t.notificationRequested == true {
+                                Button("Retry alert") {
+                                    scheduling = true
+                                    Task { notificationStatus = await PatientNotification.schedule(t, patient: c.name); scheduling = false }
+                                }.tint(.blue)
                             }
                         }
                     }
-                    Text("Checklist only; no background alarms. Record actual administration separately in Vetspire.").font(.caption).foregroundStyle(.secondary)
+                    Text("Supplemental reminders only. Notifications can be silenced, delayed or disabled by iOS. Patient name / task may appear on the lock screen; use fictional or clinic-approved identifiers. Follow clinic monitoring and medication schedules independently.").font(.caption).foregroundStyle(.secondary)
                 }
                 Section("Heart rate trend • entered readings") {
                     let values = c.entries.filter { $0.heartRate != nil }.sorted { $0.time < $1.time }
@@ -329,5 +375,59 @@ struct ClinicalReferences: View {
             Link("WSAVA global guidelines", destination: URL(string: "https://wsava.org/global-guidelines/")!)
             Text("Links are reference starting points, not a comprehensive validated clinical library.")
         }.navigationTitle("References")
+    }
+}
+
+enum PatientNotification {
+    static func key(_ id: UUID) -> String { "vetmate.patient." + id.uuidString }
+    static func cancel(_ ids: [String]) {
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ids)
+        UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: ids)
+    }
+    static func schedule(_ task: ClinicalTask, patient: String) async -> String {
+        let center = UNUserNotificationCenter.current()
+        do {
+            let allowed = try await center.requestAuthorization(options: [.alert, .sound, .badge])
+            guard allowed else { return "Saved, but notifications are OFF. Enable VetMate notifications in iPhone Settings." }
+            let settings = await center.notificationSettings()
+            guard settings.authorizationStatus == .authorized || settings.authorizationStatus == .provisional else { return "Saved, but notification permission is unavailable." }
+            let seconds = task.due.timeIntervalSinceNow
+            guard seconds > 0 else { return "Reminder is already due. Check the patient task list." }
+            let pending = await center.pendingNotificationRequests()
+            guard pending.contains(where: { $0.identifier == key(task.id) }) || pending.count < 60 else { return "Saved, but too many pending iPhone alerts. Complete or delete reminders before retrying." }
+            let content = UNMutableNotificationContent()
+            content.title = "VetMate • " + patient
+            content.body = task.title
+            content.sound = .default
+            let request = UNNotificationRequest(identifier: key(task.id), content: content, trigger: UNTimeIntervalNotificationTrigger(timeInterval: max(1, seconds), repeats: false))
+            try await center.add(request)
+            return settings.soundSetting == .enabled && settings.alertSetting == .enabled ? "iPhone reminder scheduled. Verify notification settings and test before use." : "Reminder scheduled, but iPhone sounds or banners may be disabled."
+        } catch { return "Saved, but the iPhone reminder could not be scheduled. Retry from the task list." }
+    }
+}
+struct AllPatientReminders: View {
+    @ObservedObject var store: ClinicalStore
+    var body: some View {
+        TimelineView(.periodic(from: .now, by: 15)) { context in
+            List {
+                ForEach(store.cases.flatMap { c in c.tasks.filter { $0.completed == nil }.map { ReminderRow(patient: c, task: $0) } }.sorted { $0.task.due < $1.task.due }) { row in
+                    NavigationLink { CaseWorkspace(store: store, id: row.patient.id) } label: {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(row.patient.name).font(.headline)
+                            Text(row.task.title)
+                            Text(row.task.due.formatted()).font(.caption)
+                            if row.task.due <= context.date { Text("Due / overdue").foregroundStyle(.orange) }
+                            else { Text(row.task.due, style: .timer).monospacedDigit().foregroundStyle(.blue) }
+                        }
+                    }
+                }
+                Text("Supplemental checklist — keep clinic alarms and monitoring active.").font(.caption)
+            }
+        }.navigationTitle("Patient Reminders")
+    }
+    struct ReminderRow: Identifiable {
+        var id: UUID { task.id }
+        let patient: ClinicalCase
+        let task: ClinicalTask
     }
 }
